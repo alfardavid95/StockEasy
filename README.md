@@ -70,3 +70,6 @@ David Alfaro
 -Estado del proyecto
 Avance 1: Historias de usuario, criterios de aceptación, backlog priorizado, prototipo visual, mapa de navegación y modelo preliminar de datos.
 
+Link de presentacion 
+https://canva.link/lp8ccj998o48wem
+
