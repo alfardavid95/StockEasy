@@ -65,7 +65,10 @@ Antes de hacer merge, se debe revisar que el código funcione correctamente.
 Los commits deben tener mensajes claros y relacionados con el cambio realizado.
 
 -Integrantes
-David Alfaro
+David Alfaro Cordero | dalfaro70010@ufide.ac.cr
+Dylan Madrid Vélez | dmadrid00614@ufide.ac.cr 
+Sebastian Bustos Salazar | sbustos70744@ufide.ac.cr
+
 
 -Estado del proyecto
 Avance 1: Historias de usuario, criterios de aceptación, backlog priorizado, prototipo visual, mapa de navegación y modelo preliminar de datos.
