@@ -66,6 +66,7 @@ Los commits deben tener mensajes claros y relacionados con el cambio realizado.
 
 -Integrantes
 David Alfaro
+Dylan Madrid
 
 -Estado del proyecto
 Avance 1: Historias de usuario, criterios de aceptación, backlog priorizado, prototipo visual, mapa de navegación y modelo preliminar de datos.
