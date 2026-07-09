@@ -2,6 +2,9 @@ package com.stockeasy.domain;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Pattern;
 
 @Entity
 @Table(name = "proveedor")
@@ -13,9 +16,17 @@ public class Proveedor implements Serializable {
     @Column(name = "id_proveedor")
     private Integer idProveedor;
 
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
+    
+    @NotBlank(message = "El telefono es obligatorio")
+    @Pattern(regexp = "\\d{8}", message = "El teléfono debe tener exactamente 8 digitos")
     private String telefono;
+    
+    @NotBlank(message = "El correo es obligatorio")
+    @Email(message = "El formato del correo no es válido")
     private String correo;
+    
     private String direccion;
     private Boolean estado = true;
 
