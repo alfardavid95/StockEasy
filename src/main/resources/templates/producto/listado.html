@@ -1,1 +1,59 @@
-<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{general/fragmentos :: head('Productos')}"></head><body><div th:replace="~{general/fragmentos :: sidebar}"></div><div class="page"><div th:replace="~{general/fragmentos :: topbar}"></div><main class="content"><div class="head"><div><h1>Productos</h1><p>Consulta y administración de productos registrados</p></div><a class="btn btn-primary" th:href="@{/productos/nuevo}">Registrar producto</a></div><form class="filters" th:action="@{/productos/listado}" method="get"><input class="form-control" name="texto" placeholder="Buscar por nombre o código"><select class="form-select" name="idCategoria"><option value="">Todas las categorías</option><option th:each="c:${categorias}" th:value="${c.idCategoria}" th:text="${c.nombre}"></option></select><select class="form-select" name="idProveedor"><option value="">Todos los proveedores</option><option th:each="p:${proveedores}" th:value="${p.idProveedor}" th:text="${p.nombre}"></option></select><button class="btn btn-outline-primary">Buscar</button></form><div class="panel"><table class="table table-hover"><tr><th>Código</th><th>Producto</th><th>Categoría</th><th>Proveedor</th><th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th></tr><tr th:each="p:${productos}"><td th:text="${p.codigo}"></td><td th:text="${p.nombre}"></td><td th:text="${p.categoria.nombre}"></td><td th:text="${p.proveedor.nombre}"></td><td th:text="${p.precio}"></td><td th:text="${p.stockActual}"></td><td><span th:if="${p.estado and !p.bajoStock}" class="badge text-bg-success">Activo</span><span th:if="${p.estado and p.bajoStock}" class="badge text-bg-warning">Bajo stock</span><span th:if="${!p.estado}" class="badge text-bg-secondary">Inactivo</span></td><td><a th:href="@{/productos/detalle/{id}(id=${p.idProducto})}">Ver</a> | <a th:href="@{/productos/editar/{id}(id=${p.idProducto})}">Editar</a> | <a class="text-danger" th:href="@{/productos/desactivar/{id}(id=${p.idProducto})}">Desactivar</a></td></tr></table></div></main><div th:replace="~{general/fragmentos :: footer}"></div></div><div th:replace="~{general/fragmentos :: scripts}"></div></body></html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head('Productos')}"></head>
+    <body>
+        <div th:replace="~{general/fragmentos :: sidebar}"></div>
+        <div class="page">
+            <div th:replace="~{general/fragmentos :: topbar}"></div>
+            <main class="content">
+                <div class="head">
+                    <div>
+                        <h1>Productos</h1>
+                        <p>Consulta y administración de productos registrados</p>
+                    </div>
+                    <a class="btn btn-primary" th:href="@{/productos/nuevo}">Registrar producto</a>
+                </div>
+                <form class="filters" th:action="@{/productos/listado}" method="get">
+                    <input class="form-control" name="texto" placeholder="Buscar por nombre o código">
+                    <select class="form-select" name="idCategoria">
+                        <option value="">Todas las categorías</option>
+                        <option th:each="c:${categorias}" th:value="${c.idCategoria}" th:text="${c.nombre}"></option>
+                    </select>
+                    <select class="form-select" name="idProveedor">
+                        <option value="">Todos los proveedores</option>
+                        <option th:each="p:${proveedores}" th:value="${p.idProveedor}" th:text="${p.nombre}"></option>
+                    </select>
+                    <button class="btn btn-outline-primary">Buscar</button>
+                </form>
+                <div class="panel">
+                    <table class="table table-hover">
+                        <tr>
+                            <th>Código</th><th>Producto</th><th>Categoría</th><th>Proveedor</th>
+                            <th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th>
+                        </tr>
+                        <tr th:each="p:${productos}">
+                            <td th:text="${p.codigo}"></td>
+                            <td th:text="${p.nombre}"></td>
+                            <td th:text="${p.categoria.nombre}"></td>
+                            <td th:text="${p.proveedor.nombre}"></td>
+                            <td th:text="${p.precio}"></td>
+                            <td th:text="${p.stockActual}"></td>
+                            <td>
+                                <span th:if="${p.estado and !p.bajoStock}" class="badge text-bg-success">Activo</span>
+                                <span th:if="${p.estado and p.bajoStock}" class="badge text-bg-warning">Bajo stock</span>
+                                <span th:if="${!p.estado}" class="badge text-bg-secondary">Inactivo</span>
+                            </td>
+                            <td>
+                                <a th:href="@{/productos/detalle/{id}(id=${p.idProducto})}">Ver</a> |
+                                <a th:href="@{/productos/editar/{id}(id=${p.idProducto})}">Editar</a> |
+                                <a class="text-danger" th:href="@{/productos/desactivar/{id}(id=${p.idProducto})}" onclick="return confirm('¿Seguro que desea desactivar este producto?');">Desactivar</a>
+                            </td>
+                        </tr>
+                    </table>
+                </div>
+            </main>
+            <div th:replace="~{general/fragmentos :: footer}"></div>
+        </div>
+        <div th:replace="~{general/fragmentos :: scripts}"></div>
+    </body>
+</html>
