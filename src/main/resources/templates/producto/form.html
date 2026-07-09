@@ -9,7 +9,10 @@
                 <h1>Producto</h1>
                 <form class="panel formgrid" th:action="@{/productos/guardar}" th:object="${producto}" method="post">
                     <input type="hidden" th:field="*{idProducto}">
-                    <input class="form-control" th:field="*{codigo}" placeholder="Código" required>
+                    <div>
+                        <input class="form-control" th:field="*{codigo}" placeholder="Código" required>
+                        <span class="text-danger" th:if="${#fields.hasErrors('codigo')}" th:errors="*{codigo}"></span>
+                    </div>
                     <input class="form-control" th:field="*{nombre}" placeholder="Nombre" required>
 
                     <select class="form-select" th:field="*{categoria.idCategoria}" required>

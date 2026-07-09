@@ -6,6 +6,9 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 public interface ProductoRepository extends JpaRepository<Producto, Integer> {
     long countByEstadoTrue();
+    
+    boolean existsByCodigoAndIdProductoNot(String codigo, Integer idProducto);
+    
     @Query("""
            SELECT p FROM Producto p
            WHERE (:texto IS NULL OR :texto = '' OR LOWER(p.nombre) LIKE LOWER(CONCAT('%', :texto, '%')) OR LOWER(p.codigo) LIKE LOWER(CONCAT('%', :texto, '%')))

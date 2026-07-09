@@ -8,4 +8,5 @@ public interface ProductoService {
     void save(Producto producto);
     void desactivar(Integer id);
     long countActivos();
+    boolean existeCodigo(String codigo, Integer idProducto);
 }

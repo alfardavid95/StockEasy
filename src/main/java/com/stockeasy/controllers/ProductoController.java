@@ -45,9 +45,12 @@ public class ProductoController {
     }
 
     @PostMapping("/guardar")
-    public String guardar(@Valid Producto producto, BindingResult resultado, Model modelo) {
-        if (resultado.hasErrors()){
-            cargarCombos(modelo);
+    public String guardar(@Valid Producto producto, BindingResult result, Model model) {
+        if (producto.getCodigo() != null && productoService.existeCodigo(producto.getCodigo(), producto.getIdProducto())) {
+            result.rejectValue("codigo", "error.codigo", "Ya existe un producto con ese código");
+        }
+        if (result.hasErrors()) {
+            cargarCombos(model);
             return "producto/form";
         }
         productoService.save(producto);

@@ -21,4 +21,6 @@ public class ProductoServiceImpl implements ProductoService {
     public void desactivar(Integer id) { Producto p=getProducto(id); if(p!=null){p.setEstado(false); repo.save(p);} }
     @Override @Transactional(readOnly=true)
     public long countActivos() { return repo.countByEstadoTrue(); }
+    @Override @Transactional(readOnly=true)
+    public boolean existeCodigo(String codigo, Integer idProducto) { return repo.existsByCodigoAndIdProductoNot(codigo, idProducto == null ? -1 : idProducto);}
 }
