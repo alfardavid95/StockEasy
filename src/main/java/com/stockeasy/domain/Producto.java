@@ -3,6 +3,7 @@ package com.stockeasy.domain;
 import jakarta.persistence.*;
 import java.io.Serializable;
 import java.math.BigDecimal;
+import jakarta.validation.constraints.PositiveOrZero;
 
 @Entity
 @Table(name = "producto")
@@ -17,11 +18,15 @@ public class Producto implements Serializable {
     private String codigo;
     private String nombre;
     private String descripcion;
+    
+    @PositiveOrZero(message = "El precio no puede ser negativo")
     private BigDecimal precio;
 
+    @PositiveOrZero(message = "El stock actual no puede ser negativo")
     @Column(name = "stock_actual")
     private Integer stockActual = 0;
 
+    @PositiveOrZero(message = "El stock mínimo no puede ser negativo")
     @Column(name = "stock_minimo")
     private Integer stockMinimo = 0;
 
