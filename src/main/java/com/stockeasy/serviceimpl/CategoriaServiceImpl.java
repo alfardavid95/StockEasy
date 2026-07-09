@@ -13,4 +13,5 @@ public class CategoriaServiceImpl implements CategoriaService {
     @Override @Transactional(readOnly=true) public Categoria getCategoria(Integer id){ return repo.findById(id).orElse(null); }
     @Override @Transactional public void save(Categoria c){ if(c.getEstado()==null)c.setEstado(true); repo.save(c); }
     @Override @Transactional public void desactivar(Integer id){ Categoria c=getCategoria(id); if(c!=null){c.setEstado(false); repo.save(c);} }
+    @Override @Transactional(readOnly=true) public boolean existeNombre(String nombre, Integer idCategoria) { return repo.existsByNombreAndIdCategoriaNot(nombre, idCategoria == null ? -1 : idCategoria); }
 }

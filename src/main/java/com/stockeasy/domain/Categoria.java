@@ -2,6 +2,7 @@ package com.stockeasy.domain;
 
 import jakarta.persistence.*;
 import java.io.Serializable;
+import jakarta.validation.constraints.NotBlank;
 
 @Entity
 @Table(name = "categoria")
@@ -13,7 +14,9 @@ public class Categoria implements Serializable {
     @Column(name = "id_categoria")
     private Integer idCategoria;
 
+    @NotBlank(message = "El nombre es obligatorio")
     private String nombre;
+    
     private String descripcion;
     private Boolean estado = true;
 

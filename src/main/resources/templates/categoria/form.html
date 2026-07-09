@@ -1,1 +1,31 @@
-<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{general/fragmentos :: head('Formulario')}"></head><body><div th:replace="~{general/fragmentos :: sidebar}"></div><div class="page"><div th:replace="~{general/fragmentos :: topbar}"></div><main class="content"><h1>Formulario</h1><form class="panel formgrid" th:action="@{/categorias/guardar}" th:object="${categoria}" method="post"><input type="hidden" th:field="*{idCategoria}"><input class="form-control" th:field="*{nombre}" placeholder="Nombre"><input class="form-control" th:field="*{descripcion}" placeholder="Descripción"><select class="form-select" th:field="*{estado}"><option th:value="true">Activo</option><option th:value="false">Inactivo</option></select><div class="full right"><a class="btn btn-secondary" th:href="@{/categorias/listado}">Cancelar</a><button class="btn btn-primary">Guardar</button></div></form></main><div th:replace="~{general/fragmentos :: footer}"></div></div><div th:replace="~{general/fragmentos :: scripts}"></div></body></html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+    <head th:replace="~{general/fragmentos :: head('Formulario')}"></head>
+    <body>
+        <div th:replace="~{general/fragmentos :: sidebar}"></div>
+        <div class="page">
+            <div th:replace="~{general/fragmentos :: topbar}"></div>
+            <main class="content">
+                <h1>Formulario</h1>
+                <form class="panel formgrid" th:action="@{/categorias/guardar}" th:object="${categoria}" method="post">
+                    <input type="hidden" th:field="*{idCategoria}">
+                    <div>
+                        <input class="form-control" th:field="*{nombre}" placeholder="Nombre">
+                        <span class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+                    </div>
+                    <input class="form-control" th:field="*{descripcion}" placeholder="Descripción">
+                    <select class="form-select" th:field="*{estado}">
+                        <option th:value="true">Activo</option>
+                        <option th:value="false">Inactivo</option>
+                    </select>
+                    <div class="full right">
+                        <a class="btn btn-secondary" th:href="@{/categorias/listado}">Cancelar</a>
+                        <button class="btn btn-primary">Guardar</button>
+                    </div>
+                </form>
+            </main>
+            <div th:replace="~{general/fragmentos :: footer}"></div>
+        </div>
+        <div th:replace="~{general/fragmentos :: scripts}"></div>
+    </body>
+</html>
