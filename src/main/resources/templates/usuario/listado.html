@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{general/fragmentos :: head('Usuarios')}"></head>
-    <body>
+    <body class="bg-body-secondary">
         <div th:replace="~{general/fragmentos :: sidebar}"></div>
         <div class="page">
             <div th:replace="~{general/fragmentos :: topbar}"></div>
@@ -11,9 +11,13 @@
                     <a class="btn btn-primary" th:href="@{/usuarios/nuevo}">Registrar usuario</a>
                 </div>
                 <div class="panel">
-                    <table class="table">
+                    <table class="table table-bordered align-middle">
                         <tr>
-                            <th>Nombre</th><th>Correo</th><th>Rol</th><th>Estado</th><th>Acciones</th>
+                            <th class="text-primary fw-bold">Nombre</th>
+                            <th class="text-primary fw-bold">Correo</th>
+                            <th class="text-primary fw-bold">Rol</th>
+                            <th class="text-primary fw-bold">Estado</th>
+                            <th class="text-primary fw-bold">Acciones</th>
                         </tr>
                         <tr th:each="u:${usuarios}">
                             <td th:text="${u.nombre}"></td>

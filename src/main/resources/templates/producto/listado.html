@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
     <head th:replace="~{general/fragmentos :: head('Productos')}"></head>
-    <body>
+    <body class="bg-body-secondary">
         <div th:replace="~{general/fragmentos :: sidebar}"></div>
         <div class="page">
             <div th:replace="~{general/fragmentos :: topbar}"></div>
@@ -26,10 +26,16 @@
                     <button class="btn btn-outline-primary">Buscar</button>
                 </form>
                 <div class="panel">
-                    <table class="table table-hover">
+                    <table class="table table-hover table-bordered align-middle">
                         <tr>
-                            <th>Código</th><th>Producto</th><th>Categoría</th><th>Proveedor</th>
-                            <th>Precio</th><th>Stock</th><th>Estado</th><th>Acciones</th>
+                            <th class="text-primary fw-bold">Código</th>
+                            <th class="text-primary fw-bold">Producto</th>
+                            <th class="text-primary fw-bold">Categoría</th>
+                            <th class="text-primary fw-bold">Proveedor</th>
+                            <th class="text-primary fw-bold">Precio</th>
+                            <th class="text-primary fw-bold">Stock</th>
+                            <th class="text-primary fw-bold">Estado</th>
+                            <th class="text-primary fw-bold">Acciones</th>
                         </tr>
                         <tr th:each="p:${productos}">
                             <td th:text="${p.codigo}"></td>

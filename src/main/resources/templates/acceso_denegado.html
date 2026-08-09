@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{general/fragmentos :: head('Acceso denegado')}"></head>
+<body class="login-body">
+<main class="login-card">
+    <h1><i class="fa-solid fa-ban"></i> Acceso denegado</h1>
+    <p>Tu rol no tiene permiso para ver esta página.</p>
+    <a class="btn btn-primary w-100" th:href="@{/dashboard}">Volver al dashboard</a>
+</main>
+<div th:replace="~{general/fragmentos :: scripts}"></div>
+</body>
+</html>
