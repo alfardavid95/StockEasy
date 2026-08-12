@@ -11,8 +11,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
-@RequestMapping("/reportes")
-public class ReporteController {
+@RequestMapping("/inventario")
+public class InventarioController {
 
     @Autowired
     private ProductoService productoService;
@@ -23,27 +23,22 @@ public class ReporteController {
     @Autowired
     private ProveedorService proveedorService;
 
-    @GetMapping("/bajo-stock")
-    public String bajoStock(
+    @GetMapping
+    public String inventarioGeneral(
+            @RequestParam(required = false) String texto,
             @RequestParam(required = false) Integer idCategoria,
             @RequestParam(required = false) Integer idProveedor,
-            Model model
-    ) {
+            @RequestParam(required = false) Boolean estado,
+            Model model) {
 
         model.addAttribute(
                 "productos",
-                productoService.getProductosBajoStock(
+                productoService.getProductos(
+                        texto,
                         idCategoria,
-                        idProveedor
+                        idProveedor,
+                        estado
                 )
-        );
-
-        model.addAttribute(
-                "totalBajoStock",
-                productoService.getProductosBajoStock(
-                        idCategoria,
-                        idProveedor
-                ).size()
         );
 
         model.addAttribute(
@@ -56,16 +51,11 @@ public class ReporteController {
                 proveedorService.getProveedores()
         );
 
-        model.addAttribute(
-                "idCategoria",
-                idCategoria
-        );
+        model.addAttribute("texto", texto);
+        model.addAttribute("idCategoria", idCategoria);
+        model.addAttribute("idProveedor", idProveedor);
+        model.addAttribute("estado", estado);
 
-        model.addAttribute(
-                "idProveedor",
-                idProveedor
-        );
-
-        return "reporte/bajo-stock";
+        return "inventario/listado";
     }
 }

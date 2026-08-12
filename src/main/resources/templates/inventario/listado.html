@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{general/fragmentos :: head('Inventario General')}"></head>
+
+<body>
+
+    <div th:replace="~{general/fragmentos :: sidebar}"></div>
+
+    <div class="page">
+
+        <div th:replace="~{general/fragmentos :: topbar}"></div>
+
+        <main class="content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Inventario General</h1>
+                    <p class="subtitle">
+                        Consulta general de productos y existencias
+                    </p>
+                </div>
+            </div>
+
+            <!-- FILTROS -->
+            <form class="filter-card"
+                  th:action="@{/inventario}"
+                  method="get">
+
+                <!-- BUSQUEDA -->
+                <input type="text"
+                       class="form-control"
+                       name="texto"
+                       th:value="${texto}"
+                       placeholder="Buscar por código o producto">
+
+                <!-- CATEGORIA -->
+                <select class="form-select"
+                        name="idCategoria">
+
+                    <option value="">
+                        Todas las categorías
+                    </option>
+
+                    <option th:each="categoria : ${categorias}"
+                            th:value="${categoria.idCategoria}"
+                            th:text="${categoria.nombre}"
+                            th:selected="${idCategoria != null
+                                and idCategoria == categoria.idCategoria}">
+                    </option>
+
+                </select>
+
+                <!-- PROVEEDOR -->
+                <select class="form-select"
+                        name="idProveedor">
+
+                    <option value="">
+                        Todos los proveedores
+                    </option>
+
+                    <option th:each="proveedor : ${proveedores}"
+                            th:value="${proveedor.idProveedor}"
+                            th:text="${proveedor.nombre}"
+                            th:selected="${idProveedor != null
+                                and idProveedor == proveedor.idProveedor}">
+                    </option>
+
+                </select>
+
+                <!-- ESTADO -->
+                <select class="form-select"
+                        name="estado">
+
+                    <option value=""
+                            th:selected="${estado == null}">
+                        Todos los estados
+                    </option>
+
+                    <option value="true"
+                            th:selected="${estado != null and estado}">
+                        Activos
+                    </option>
+
+                    <option value="false"
+                            th:selected="${estado != null and !estado}">
+                        Inactivos
+                    </option>
+
+                </select>
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="fa-solid fa-filter"></i>
+                    Filtrar
+
+                </button>
+
+                <a th:href="@{/inventario}"
+                   class="btn btn-outline-secondary">
+
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Limpiar
+
+                </a>
+
+            </form>
+
+            <!-- TABLA GENERAL -->
+            <div class="panel">
+
+                <div class="d-flex justify-content-between
+                            align-items-center mb-3">
+
+                    <h5 class="mb-0">
+                        Existencias
+                    </h5>
+
+                    <span class="badge text-bg-primary"
+                          th:text="${productos.size() + ' productos'}">
+                        0 productos
+                    </span>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Proveedor</th>
+                                <th>Stock actual</th>
+                                <th>Stock mínimo</th>
+                                <th>Estado inventario</th>
+                                <th>Estado producto</th>
+                                <th>Acciones</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="producto : ${productos}">
+
+                                <td th:text="${producto.codigo}">
+                                    P-001
+                                </td>
+
+                                <td th:text="${producto.nombre}">
+                                    Producto
+                                </td>
+
+                                <td th:text="${producto.categoria.nombre}">
+                                    Categoría
+                                </td>
+
+                                <td th:text="${producto.proveedor.nombre}">
+                                    Proveedor
+                                </td>
+
+                                <td>
+                                    <strong th:text="${producto.stockActual}">
+                                        0
+                                    </strong>
+                                </td>
+
+                                <td th:text="${producto.stockMinimo}">
+                                    0
+                                </td>
+
+                                <!-- ESTADO DEL INVENTARIO -->
+                                <td>
+
+                                    <span class="badge text-bg-danger"
+                                          th:if="${producto.stockActual <= producto.stockMinimo}">
+                                        Bajo stock
+                                    </span>
+
+                                    <span class="badge text-bg-success"
+                                          th:if="${producto.stockActual > producto.stockMinimo}">
+                                        Disponible
+                                    </span>
+
+                                </td>
+
+                                <!-- ESTADO DEL PRODUCTO -->
+                                <td>
+
+                                    <span class="badge text-bg-success"
+                                          th:if="${producto.estado}">
+                                        Activo
+                                    </span>
+
+                                    <span class="badge text-bg-secondary"
+                                          th:unless="${producto.estado}">
+                                        Inactivo
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <a th:href="@{/productos/detalle/{id}
+                                       (id=${producto.idProducto})}"
+                                       class="btn btn-sm btn-outline-primary">
+
+                                        Ver
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            <!-- SIN RESULTADOS -->
+                            <tr th:if="${#lists.isEmpty(productos)}">
+
+                                <td colspan="9"
+                                    class="text-center text-muted py-4">
+
+                                    No se encontraron productos
+                                    con los filtros seleccionados.
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+        <div th:replace="~{general/fragmentos :: footer}"></div>
+
+    </div>
+
+    <div th:replace="~{general/fragmentos :: scripts}"></div>
+
+</body>
+
+</html>

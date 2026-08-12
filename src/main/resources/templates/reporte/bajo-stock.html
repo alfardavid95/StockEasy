@@ -1,44 +1,237 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{general/fragmentos :: head('Bajo stock')}">
-        
-    </head>
-    <body class="bg-body-secondary">
-        <div th:replace="~{general/fragmentos :: sidebar}"></div>
-        <div class="page">
-            <div th:replace="~{general/fragmentos :: topbar}">
-                
-            </div>
-            <main class="content">
-                <h1>Reporte de bajo stock</h1>
-                <div class="panel">
-                    <table class="table table-bordered align-middle">
-                        <tr>
-                            <th class="text-primary fw-bold">Código</th>
-                            <th class="text-primary fw-bold">Producto</th>
-                            <th class="text-primary fw-bold">Categoría</th>
-                            <th class="text-primary fw-bold">Proveedor</th>
-                            <th class="text-primary fw-bold">Stock actual</th>
-                            <th class="text-primary fw-bold">Stock mínimo</th>
-                            <th class="text-primary fw-bold">Acción</th>
-                        </tr>
-                        <tr th:each="p:${productos}">
-                            <td th:text="${p.codigo}"></td>
-                            <td th:text="${p.nombre}"></td>
-                            <td th:text="${p.categoria.nombre}"></td>
-                            <td th:text="${p.proveedor.nombre}"></td>
-                            <td th:text="${p.stockActual}"></td>
-                            <td th:text="${p.stockMinimo}"></td>
-                            <td>
-                                <a th:href="@{/movimientos/entrada}">Registrar entrada</a>
-                            </td>
-                        </tr>
-                    </table>
+
+<head th:replace="~{general/fragmentos :: head('Reporte bajo stock')}"></head>
+
+<body>
+
+    <div th:replace="~{general/fragmentos :: sidebar}"></div>
+
+    <div class="page">
+
+        <div th:replace="~{general/fragmentos :: topbar}"></div>
+
+        <main class="content">
+
+            <div class="page-header">
+                <div>
+                    <h1>Reporte de bajo stock</h1>
+                    <p class="subtitle">
+                        Productos cuyo inventario actual se encuentra
+                        por debajo o igual al stock mínimo definido
+                    </p>
                 </div>
-            </main>
-            <div th:replace="~{general/fragmentos :: footer}">
-                
-            </div></div>
-        <div th:replace="~{general/fragmentos :: scripts}"></div>
-    </body>
+            </div>
+
+            <!-- FILTROS -->
+            <form class="filter-card"
+                  th:action="@{/reportes/bajo-stock}"
+                  method="get">
+
+                <select class="form-select"
+                        name="idCategoria">
+
+                    <option value="">
+                        Todas las categorías
+                    </option>
+
+                    <option th:each="categoria : ${categorias}"
+                            th:value="${categoria.idCategoria}"
+                            th:text="${categoria.nombre}"
+                            th:selected="${idCategoria != null
+                                and idCategoria == categoria.idCategoria}">
+                    </option>
+
+                </select>
+
+                <select class="form-select"
+                        name="idProveedor">
+
+                    <option value="">
+                        Todos los proveedores
+                    </option>
+
+                    <option th:each="proveedor : ${proveedores}"
+                            th:value="${proveedor.idProveedor}"
+                            th:text="${proveedor.nombre}"
+                            th:selected="${idProveedor != null
+                                and idProveedor == proveedor.idProveedor}">
+                    </option>
+
+                </select>
+
+                <button type="submit"
+                        class="btn btn-primary">
+
+                    <i class="fa-solid fa-filter"></i>
+                    Filtrar
+
+                </button>
+
+                <a th:href="@{/reportes/bajo-stock}"
+                   class="btn btn-outline-secondary">
+
+                    <i class="fa-solid fa-rotate-left"></i>
+                    Limpiar
+
+                </a>
+
+            </form>
+
+            <!-- RESUMEN -->
+            <section class="cards">
+
+                <div class="stat-card warning">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <span>
+                        Productos con bajo stock
+                    </span>
+
+                    <strong th:text="${totalBajoStock}">
+                        0
+                    </strong>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <i class="fa-solid fa-tags"></i>
+
+                    <span>
+                        Categorías registradas
+                    </span>
+
+                    <strong th:text="${categorias.size()}">
+                        0
+                    </strong>
+
+                </div>
+
+                <div class="stat-card">
+
+                    <i class="fa-solid fa-truck"></i>
+
+                    <span>
+                        Proveedores registrados
+                    </span>
+
+                    <strong th:text="${proveedores.size()}">
+                        0
+                    </strong>
+
+                </div>
+
+            </section>
+
+            <!-- TABLA -->
+            <div class="panel">
+
+                <table class="table table-hover align-middle">
+
+                    <thead>
+
+                        <tr>
+                            <th>Código</th>
+                            <th>Producto</th>
+                            <th>Categoría</th>
+                            <th>Proveedor</th>
+                            <th>Stock actual</th>
+                            <th>Stock mínimo</th>
+                            <th>Diferencia</th>
+                            <th>Acciones</th>
+                        </tr>
+
+                    </thead>
+
+                    <tbody>
+
+                        <tr th:each="producto : ${productos}">
+
+                            <td th:text="${producto.codigo}">
+                                P-001
+                            </td>
+
+                            <td th:text="${producto.nombre}">
+                                Producto
+                            </td>
+
+                            <td th:text="${producto.categoria.nombre}">
+                                Categoría
+                            </td>
+
+                            <td th:text="${producto.proveedor.nombre}">
+                                Proveedor
+                            </td>
+
+                            <td>
+
+                                <span class="badge text-bg-warning"
+                                      th:text="${producto.stockActual}">
+                                    0
+                                </span>
+
+                            </td>
+
+                            <td th:text="${producto.stockMinimo}">
+                                0
+                            </td>
+
+                            <td class="text-danger fw-bold"
+                                th:text="${producto.stockActual
+                                    - producto.stockMinimo}">
+                                0
+                            </td>
+
+                            <td>
+
+                                <a th:href="@{/movimientos/entrada}"
+                                   class="btn btn-sm btn-outline-primary">
+
+                                    Registrar entrada
+
+                                </a>
+
+                                <a th:href="@{/productos/detalle/{id}
+                                   (id=${producto.idProducto})}"
+                                   class="btn btn-sm btn-outline-secondary">
+
+                                    Ver producto
+
+                                </a>
+
+                            </td>
+
+                        </tr>
+
+                        <!-- Si no hay resultados -->
+                        <tr th:if="${#lists.isEmpty(productos)}">
+
+                            <td colspan="8"
+                                class="text-center text-muted py-4">
+
+                                No hay productos con bajo stock
+                                para los filtros seleccionados.
+
+                            </td>
+
+                        </tr>
+
+                    </tbody>
+
+                </table>
+
+            </div>
+
+        </main>
+
+        <div th:replace="~{general/fragmentos :: footer}"></div>
+
+    </div>
+
+    <div th:replace="~{general/fragmentos :: scripts}"></div>
+
+</body>
+
 </html>
