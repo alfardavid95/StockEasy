@@ -1,45 +1,303 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{general/fragmentos :: head('Movimientos')}"></head>
-    <body class="bg-body-secondary">
-        <div th:replace="~{general/fragmentos :: sidebar}"></div>
-        <div class="page">
-            <div th:replace="~{general/fragmentos :: topbar}"></div>
-            <main class="content">
-                <h1>Historial de movimientos</h1>
-                <form class="filters" method="get">
-                    <input class="form-control" name="texto" placeholder="Buscar producto" th:value="${texto}">
-                    <select class="form-select" name="tipo">
-                        <option value="">Todos</option>
-                        <option th:selected="${tipo == 'Entrada'}">Entrada</option>
-                        <option th:selected="${tipo == 'Salida'}">Salida</option>
-                    </select>
-                    <input class="form-control" type="date" name="fechaInicio" th:value="${fechaInicio}">
-                    <input class="form-control" type="date" name="fechaFin" th:value="${fechaFin}">
-                    <button class="btn btn-outline-primary">Buscar</button>
-                </form>
-                <div class="panel">
-                    <table class="table">
-                        <tr>
-                            <th>Fecha</th><th>Código</th><th>Producto</th><th>Tipo</th><th>Cantidad</th>
-                            <th>Stock anterior</th><th>Stock nuevo</th><th>Usuario</th><th>Observación</th>
-                        </tr>
-                        <tr th:each="m:${movimientos}">
-                            <td th:text="${#temporals.format(m.fecha,'dd/MM/yyyy HH:mm')}"></td>
-                            <td th:text="${m.producto.codigo}"></td>
-                            <td th:text="${m.producto.nombre}"></td>
-                            <td th:text="${m.tipoMovimiento.nombre}"></td>
-                            <td th:text="${m.cantidad}"></td>
-                            <td th:text="${m.stockAnterior}"></td>
-                            <td th:text="${m.stockNuevo}"></td>
-                            <td th:text="${m.usuario.nombre}"></td>
-                            <td th:text="${m.observacion}"></td>
-                        </tr>
-                    </table>
+
+<head th:replace="~{general/fragmentos :: head('Historial de movimientos')}"></head>
+
+<body class="bg-body-secondary">
+
+    <div th:replace="~{general/fragmentos :: sidebar}"></div>
+
+    <div class="page">
+
+        <div th:replace="~{general/fragmentos :: topbar}"></div>
+
+        <main class="content">
+
+            <!-- ENCABEZADO -->
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Historial de movimientos</h1>
+
+                    <p class="subtitle">
+                        Consulta de entradas y salidas registradas en el inventario
+                    </p>
+
                 </div>
-            </main>
-            <div th:replace="~{general/fragmentos :: footer}"></div>
-        </div>
-        <div th:replace="~{general/fragmentos :: scripts}"></div>
-    </body>
+
+            </div>
+
+            <!-- FILTROS -->
+            <div class="panel mb-4">
+
+                <form th:action="@{/movimientos/listado}"
+                      method="get">
+
+                    <div class="row g-3 align-items-end">
+
+                        <!-- BUSQUEDA -->
+                        <div class="col-12 col-md-6 col-lg-3">
+
+                            <label class="form-label">
+                                Buscar
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   name="texto"
+                                   th:value="${texto}"
+                                   placeholder="Producto o código">
+
+                        </div>
+
+                        <!-- TIPO DE MOVIMIENTO -->
+                        <div class="col-12 col-md-6 col-lg-2">
+
+                            <label class="form-label">
+                                Tipo de movimiento
+                            </label>
+
+                            <select class="form-select"
+                                    name="tipo">
+
+                                <option value=""
+                                        th:selected="${tipo == null or tipo == ''}">
+                                    Todos
+                                </option>
+
+                                <option value="Entrada"
+                                        th:selected="${tipo == 'Entrada'}">
+                                    Entrada
+                                </option>
+
+                                <option value="Salida"
+                                        th:selected="${tipo == 'Salida'}">
+                                    Salida
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- FECHA DESDE -->
+                        <div class="col-12 col-md-6 col-lg-2">
+
+                            <label class="form-label">
+                                Desde
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   name="fechaInicio"
+                                   th:value="${fechaInicio}">
+
+                        </div>
+
+                        <!-- FECHA HASTA -->
+                        <div class="col-12 col-md-6 col-lg-2">
+
+                            <label class="form-label">
+                                Hasta
+                            </label>
+
+                            <input type="date"
+                                   class="form-control"
+                                   name="fechaFin"
+                                   th:value="${fechaFin}">
+
+                        </div>
+
+                        <!-- BOTON BUSCAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+
+                                <i class="fa-solid fa-magnifying-glass me-1"></i>
+                                Buscar
+
+                            </button>
+
+                        </div>
+
+                        <!-- BOTON LIMPIAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <a th:href="@{/movimientos/listado}"
+                               class="btn btn-outline-secondary w-100">
+
+                                <i class="fa-solid fa-rotate-left me-1"></i>
+                                Limpiar
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- TABLA -->
+            <div class="panel">
+
+                <div class="d-flex justify-content-between
+                            align-items-center mb-3">
+
+                    <h5 class="mb-0">
+                        Movimientos registrados
+                    </h5>
+
+                    <span class="badge text-bg-primary"
+                          th:text="${movimientos.size() + ' movimientos'}">
+                        0 movimientos
+                    </span>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+                                <th>Fecha</th>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Tipo</th>
+                                <th>Cantidad</th>
+                                <th>Stock anterior</th>
+                                <th>Stock nuevo</th>
+                                <th>Usuario</th>
+                                <th>Observación</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="m : ${movimientos}">
+
+                                <!-- FECHA -->
+                                <td th:text="${#temporals.format(
+                                    m.fecha,
+                                    'dd/MM/yyyy HH:mm'
+                                )}">
+                                    10/06/2026 11:30
+                                </td>
+
+                                <!-- CODIGO -->
+                                <td th:text="${m.producto.codigo}">
+                                    P-001
+                                </td>
+
+                                <!-- PRODUCTO -->
+                                <td th:text="${m.producto.nombre}">
+                                    Mouse Logitech
+                                </td>
+
+                                <!-- TIPO -->
+                                <td>
+
+                                    <span th:if="${m.tipoMovimiento.nombre == 'Entrada'}"
+                                          class="badge text-bg-success">
+
+                                        <i class="fa-solid fa-arrow-down me-1"></i>
+                                        Entrada
+
+                                    </span>
+
+                                    <span th:if="${m.tipoMovimiento.nombre == 'Salida'}"
+                                          class="badge text-bg-warning">
+
+                                        <i class="fa-solid fa-arrow-up me-1"></i>
+                                        Salida
+
+                                    </span>
+
+                                </td>
+
+                                <!-- CANTIDAD -->
+                                <td>
+
+                                    <strong th:text="${m.cantidad}">
+                                        0
+                                    </strong>
+
+                                </td>
+
+                                <!-- STOCK ANTERIOR -->
+                                <td th:text="${m.stockAnterior}">
+                                    0
+                                </td>
+
+                                <!-- STOCK NUEVO -->
+                                <td>
+
+                                    <strong th:text="${m.stockNuevo}">
+                                        0
+                                    </strong>
+
+                                </td>
+
+                                <!-- USUARIO -->
+                                <td th:text="${m.usuario.nombre}">
+                                    David Alfaro
+                                </td>
+
+                                <!-- OBSERVACION -->
+                                <td>
+
+                                    <span th:if="${m.observacion != null
+                                            and !#strings.isEmpty(m.observacion)}"
+                                          th:text="${m.observacion}">
+                                        Observación
+                                    </span>
+
+                                    <span th:if="${m.observacion == null
+                                            or #strings.isEmpty(m.observacion)}"
+                                          class="text-muted">
+                                        Sin observación
+                                    </span>
+
+                                </td>
+
+                            </tr>
+
+                            <!-- SIN RESULTADOS -->
+                            <tr th:if="${#lists.isEmpty(movimientos)}">
+
+                                <td colspan="9"
+                                    class="text-center text-muted py-4">
+
+                                    <i class="fa-solid fa-circle-info me-1"></i>
+
+                                    No se encontraron movimientos
+                                    con los filtros seleccionados.
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+        </main>
+
+        <div th:replace="~{general/fragmentos :: footer}"></div>
+
+    </div>
+
+    <div th:replace="~{general/fragmentos :: scripts}"></div>
+
+</body>
+
 </html>

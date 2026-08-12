@@ -13,70 +13,111 @@
 
         <main class="content">
 
+            <!-- ENCABEZADO -->
             <div class="page-header">
+
                 <div>
+
                     <h1>Reporte de bajo stock</h1>
+
                     <p class="subtitle">
                         Productos cuyo inventario actual se encuentra
                         por debajo o igual al stock mínimo definido
                     </p>
+
                 </div>
+
             </div>
 
             <!-- FILTROS -->
-            <form class="filter-card"
-                  th:action="@{/reportes/bajo-stock}"
-                  method="get">
+            <div class="panel mb-4">
 
-                <select class="form-select"
-                        name="idCategoria">
+                <form th:action="@{/reportes/bajo-stock}"
+                      method="get">
 
-                    <option value="">
-                        Todas las categorías
-                    </option>
+                    <div class="row g-3 align-items-end">
 
-                    <option th:each="categoria : ${categorias}"
-                            th:value="${categoria.idCategoria}"
-                            th:text="${categoria.nombre}"
-                            th:selected="${idCategoria != null
-                                and idCategoria == categoria.idCategoria}">
-                    </option>
+                        <!-- CATEGORIA -->
+                        <div class="col-12 col-md-6 col-lg-4">
 
-                </select>
+                            <label class="form-label">
+                                Categoría
+                            </label>
 
-                <select class="form-select"
-                        name="idProveedor">
+                            <select class="form-select"
+                                    name="idCategoria">
 
-                    <option value="">
-                        Todos los proveedores
-                    </option>
+                                <option value="">
+                                    Todas las categorías
+                                </option>
 
-                    <option th:each="proveedor : ${proveedores}"
-                            th:value="${proveedor.idProveedor}"
-                            th:text="${proveedor.nombre}"
-                            th:selected="${idProveedor != null
-                                and idProveedor == proveedor.idProveedor}">
-                    </option>
+                                <option th:each="categoria : ${categorias}"
+                                        th:value="${categoria.idCategoria}"
+                                        th:text="${categoria.nombre}"
+                                        th:selected="${idCategoria != null
+                                            and idCategoria == categoria.idCategoria}">
+                                </option>
 
-                </select>
+                            </select>
 
-                <button type="submit"
-                        class="btn btn-primary">
+                        </div>
 
-                    <i class="fa-solid fa-filter"></i>
-                    Filtrar
+                        <!-- PROVEEDOR -->
+                        <div class="col-12 col-md-6 col-lg-4">
 
-                </button>
+                            <label class="form-label">
+                                Proveedor
+                            </label>
 
-                <a th:href="@{/reportes/bajo-stock}"
-                   class="btn btn-outline-secondary">
+                            <select class="form-select"
+                                    name="idProveedor">
 
-                    <i class="fa-solid fa-rotate-left"></i>
-                    Limpiar
+                                <option value="">
+                                    Todos los proveedores
+                                </option>
 
-                </a>
+                                <option th:each="proveedor : ${proveedores}"
+                                        th:value="${proveedor.idProveedor}"
+                                        th:text="${proveedor.nombre}"
+                                        th:selected="${idProveedor != null
+                                            and idProveedor == proveedor.idProveedor}">
+                                </option>
 
-            </form>
+                            </select>
+
+                        </div>
+
+                        <!-- BOTON FILTRAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+
+                                <i class="fa-solid fa-filter me-1"></i>
+                                Filtrar
+
+                            </button>
+
+                        </div>
+
+                        <!-- BOTON LIMPIAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <a th:href="@{/reportes/bajo-stock}"
+                               class="btn btn-outline-secondary w-100">
+
+                                <i class="fa-solid fa-rotate-left me-1"></i>
+                                Limpiar
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
 
             <!-- RESUMEN -->
             <section class="cards">
@@ -128,99 +169,135 @@
             <!-- TABLA -->
             <div class="panel">
 
-                <table class="table table-hover align-middle">
+                <div class="d-flex justify-content-between
+                            align-items-center mb-3">
 
-                    <thead>
+                    <h5 class="mb-0">
+                        Productos con bajo stock
+                    </h5>
 
-                        <tr>
-                            <th>Código</th>
-                            <th>Producto</th>
-                            <th>Categoría</th>
-                            <th>Proveedor</th>
-                            <th>Stock actual</th>
-                            <th>Stock mínimo</th>
-                            <th>Diferencia</th>
-                            <th>Acciones</th>
-                        </tr>
+                    <span class="badge text-bg-warning"
+                          th:text="${totalBajoStock + ' productos'}">
+                        0 productos
+                    </span>
 
-                    </thead>
+                </div>
 
-                    <tbody>
+                <div class="table-responsive">
 
-                        <tr th:each="producto : ${productos}">
+                    <table class="table table-hover align-middle">
 
-                            <td th:text="${producto.codigo}">
-                                P-001
-                            </td>
+                        <thead>
 
-                            <td th:text="${producto.nombre}">
-                                Producto
-                            </td>
+                            <tr>
+                                <th>Código</th>
+                                <th>Producto</th>
+                                <th>Categoría</th>
+                                <th>Proveedor</th>
+                                <th>Stock actual</th>
+                                <th>Stock mínimo</th>
+                                <th>Diferencia</th>
+                                <th>Acciones</th>
+                            </tr>
 
-                            <td th:text="${producto.categoria.nombre}">
-                                Categoría
-                            </td>
+                        </thead>
 
-                            <td th:text="${producto.proveedor.nombre}">
-                                Proveedor
-                            </td>
+                        <tbody>
 
-                            <td>
+                            <tr th:each="producto : ${productos}">
 
-                                <span class="badge text-bg-warning"
-                                      th:text="${producto.stockActual}">
+                                <!-- CODIGO -->
+                                <td th:text="${producto.codigo}">
+                                    P-001
+                                </td>
+
+                                <!-- PRODUCTO -->
+                                <td th:text="${producto.nombre}">
+                                    Producto
+                                </td>
+
+                                <!-- CATEGORIA -->
+                                <td th:text="${producto.categoria.nombre}">
+                                    Categoría
+                                </td>
+
+                                <!-- PROVEEDOR -->
+                                <td th:text="${producto.proveedor.nombre}">
+                                    Proveedor
+                                </td>
+
+                                <!-- STOCK ACTUAL -->
+                                <td>
+
+                                    <span class="badge text-bg-warning"
+                                          th:text="${producto.stockActual}">
+                                        0
+                                    </span>
+
+                                </td>
+
+                                <!-- STOCK MINIMO -->
+                                <td th:text="${producto.stockMinimo}">
                                     0
-                                </span>
+                                </td>
 
-                            </td>
+                                <!-- DIFERENCIA -->
+                                <td>
 
-                            <td th:text="${producto.stockMinimo}">
-                                0
-                            </td>
+                                    <strong class="text-danger"
+                                            th:text="${producto.stockActual
+                                                - producto.stockMinimo}">
+                                        0
+                                    </strong>
 
-                            <td class="text-danger fw-bold"
-                                th:text="${producto.stockActual
-                                    - producto.stockMinimo}">
-                                0
-                            </td>
+                                </td>
 
-                            <td>
+                                <!-- ACCIONES -->
+                                <td>
 
-                                <a th:href="@{/movimientos/entrada}"
-                                   class="btn btn-sm btn-outline-primary">
+                                    <div class="d-flex flex-wrap gap-2">
 
-                                    Registrar entrada
+                                        <a th:href="@{/movimientos/entrada}"
+                                           class="btn btn-sm btn-outline-primary">
 
-                                </a>
+                                            <i class="fa-solid fa-plus me-1"></i>
+                                            Registrar entrada
 
-                                <a th:href="@{/productos/detalle/{id}
-                                   (id=${producto.idProducto})}"
-                                   class="btn btn-sm btn-outline-secondary">
+                                        </a>
 
-                                    Ver producto
+                                        <a th:href="@{/productos/detalle/{id}
+                                           (id=${producto.idProducto})}"
+                                           class="btn btn-sm btn-outline-secondary">
 
-                                </a>
+                                            <i class="fa-solid fa-eye me-1"></i>
+                                            Ver producto
 
-                            </td>
+                                        </a>
 
-                        </tr>
+                                    </div>
 
-                        <!-- Si no hay resultados -->
-                        <tr th:if="${#lists.isEmpty(productos)}">
+                                </td>
 
-                            <td colspan="8"
-                                class="text-center text-muted py-4">
+                            </tr>
 
-                                No hay productos con bajo stock
-                                para los filtros seleccionados.
+                            <!-- SIN RESULTADOS -->
+                            <tr th:if="${#lists.isEmpty(productos)}">
 
-                            </td>
+                                <td colspan="8"
+                                    class="text-center text-muted py-4">
 
-                        </tr>
+                                    No hay productos con bajo stock
+                                    para los filtros seleccionados.
 
-                    </tbody>
+                                </td>
 
-                </table>
+                            </tr>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
 
             </div>
 

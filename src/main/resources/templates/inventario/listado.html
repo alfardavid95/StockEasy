@@ -14,98 +14,152 @@
         <main class="content">
 
             <div class="page-header">
+
                 <div>
+
                     <h1>Inventario General</h1>
+
                     <p class="subtitle">
                         Consulta general de productos y existencias
                     </p>
+
                 </div>
+
             </div>
 
             <!-- FILTROS -->
-            <form class="filter-card"
-                  th:action="@{/inventario}"
-                  method="get">
+            <div class="panel mb-4">
 
-                <!-- BUSQUEDA -->
-                <input type="text"
-                       class="form-control"
-                       name="texto"
-                       th:value="${texto}"
-                       placeholder="Buscar por código o producto">
+                <form th:action="@{/inventario}"
+                      method="get">
 
-                <!-- CATEGORIA -->
-                <select class="form-select"
-                        name="idCategoria">
+                    <div class="row g-3 align-items-end">
 
-                    <option value="">
-                        Todas las categorías
-                    </option>
+                        <!-- BUSQUEDA -->
+                        <div class="col-12 col-md-6 col-lg-3">
 
-                    <option th:each="categoria : ${categorias}"
-                            th:value="${categoria.idCategoria}"
-                            th:text="${categoria.nombre}"
-                            th:selected="${idCategoria != null
-                                and idCategoria == categoria.idCategoria}">
-                    </option>
+                            <label class="form-label">
+                                Buscar
+                            </label>
 
-                </select>
+                            <input type="text"
+                                   class="form-control"
+                                   name="texto"
+                                   th:value="${texto}"
+                                   placeholder="Código o producto">
 
-                <!-- PROVEEDOR -->
-                <select class="form-select"
-                        name="idProveedor">
+                        </div>
 
-                    <option value="">
-                        Todos los proveedores
-                    </option>
+                        <!-- CATEGORIA -->
+                        <div class="col-12 col-md-6 col-lg-2">
 
-                    <option th:each="proveedor : ${proveedores}"
-                            th:value="${proveedor.idProveedor}"
-                            th:text="${proveedor.nombre}"
-                            th:selected="${idProveedor != null
-                                and idProveedor == proveedor.idProveedor}">
-                    </option>
+                            <label class="form-label">
+                                Categoría
+                            </label>
 
-                </select>
+                            <select class="form-select"
+                                    name="idCategoria">
 
-                <!-- ESTADO -->
-                <select class="form-select"
-                        name="estado">
+                                <option value="">
+                                    Todas las categorías
+                                </option>
 
-                    <option value=""
-                            th:selected="${estado == null}">
-                        Todos los estados
-                    </option>
+                                <option th:each="categoria : ${categorias}"
+                                        th:value="${categoria.idCategoria}"
+                                        th:text="${categoria.nombre}"
+                                        th:selected="${idCategoria != null
+                                            and idCategoria == categoria.idCategoria}">
+                                </option>
 
-                    <option value="true"
-                            th:selected="${estado != null and estado}">
-                        Activos
-                    </option>
+                            </select>
 
-                    <option value="false"
-                            th:selected="${estado != null and !estado}">
-                        Inactivos
-                    </option>
+                        </div>
 
-                </select>
+                        <!-- PROVEEDOR -->
+                        <div class="col-12 col-md-6 col-lg-2">
 
-                <button type="submit"
-                        class="btn btn-primary">
+                            <label class="form-label">
+                                Proveedor
+                            </label>
 
-                    <i class="fa-solid fa-filter"></i>
-                    Filtrar
+                            <select class="form-select"
+                                    name="idProveedor">
 
-                </button>
+                                <option value="">
+                                    Todos los proveedores
+                                </option>
 
-                <a th:href="@{/inventario}"
-                   class="btn btn-outline-secondary">
+                                <option th:each="proveedor : ${proveedores}"
+                                        th:value="${proveedor.idProveedor}"
+                                        th:text="${proveedor.nombre}"
+                                        th:selected="${idProveedor != null
+                                            and idProveedor == proveedor.idProveedor}">
+                                </option>
 
-                    <i class="fa-solid fa-rotate-left"></i>
-                    Limpiar
+                            </select>
 
-                </a>
+                        </div>
 
-            </form>
+                        <!-- ESTADO -->
+                        <div class="col-12 col-md-6 col-lg-2">
+
+                            <label class="form-label">
+                                Estado
+                            </label>
+
+                            <select class="form-select"
+                                    name="estado">
+
+                                <option value=""
+                                        th:selected="${estado == null}">
+                                    Todos los estados
+                                </option>
+
+                                <option value="true"
+                                        th:selected="${estado != null and estado}">
+                                    Activos
+                                </option>
+
+                                <option value="false"
+                                        th:selected="${estado != null and !estado}">
+                                    Inactivos
+                                </option>
+
+                            </select>
+
+                        </div>
+
+                        <!-- BOTON FILTRAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+
+                                <i class="fa-solid fa-filter me-1"></i>
+                                Filtrar
+
+                            </button>
+
+                        </div>
+
+                        <!-- BOTON LIMPIAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <a th:href="@{/inventario}"
+                               class="btn btn-outline-secondary w-100">
+
+                                <i class="fa-solid fa-rotate-left me-1"></i>
+                                Limpiar
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
 
             <!-- TABLA GENERAL -->
             <div class="panel">
@@ -165,9 +219,11 @@
                                 </td>
 
                                 <td>
+
                                     <strong th:text="${producto.stockActual}">
                                         0
                                     </strong>
+
                                 </td>
 
                                 <td th:text="${producto.stockMinimo}">
@@ -204,12 +260,14 @@
 
                                 </td>
 
+                                <!-- ACCIONES -->
                                 <td>
 
                                     <a th:href="@{/productos/detalle/{id}
                                        (id=${producto.idProducto})}"
                                        class="btn btn-sm btn-outline-primary">
 
+                                        <i class="fa-solid fa-eye me-1"></i>
                                         Ver
 
                                     </a>

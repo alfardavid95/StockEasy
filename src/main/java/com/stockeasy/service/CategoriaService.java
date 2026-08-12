@@ -4,9 +4,14 @@ import com.stockeasy.domain.Categoria;
 import java.util.List;
 
 public interface CategoriaService {
+
     List<Categoria> getCategorias();
-    Categoria getCategoria(Integer id);
-    void save(Categoria c);
-    void desactivar(Integer id);
-    boolean existeNombre(String nombre, Integer idCategoria);
+
+    List<Categoria> buscarCategorias(String texto);
+
+    Categoria getCategoria(Integer idCategoria);
+
+    void save(Categoria categoria);
+
+    void desactivar(Integer idCategoria);
 }
