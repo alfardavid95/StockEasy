@@ -1,1 +1,389 @@
-<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{general/fragmentos :: head('Dashboard')}"></head><body class="bg-body-secondary"><div th:replace="~{general/fragmentos :: sidebar}"></div><div class="page"><div th:replace="~{general/fragmentos :: topbar}"></div><main class="content"><h1>Dashboard principal</h1><p>Vista general del inventario de StockEasy</p><section class="cards"><div class="cardx"><span>Total de productos</span><b th:text="${totalProductos}">0</b></div><div class="cardx warn"><span>Productos con bajo stock</span><b th:text="${totalBajoStock}">0</b></div><div class="cardx"><span>Entradas del mes</span><b th:text="${entradasMes}">0</b></div><div class="cardx"><span>Salidas del mes</span><b th:text="${salidasMes}">0</b></div></section><section class="grid"><div class="panel"><h2>Últimos movimientos</h2><table class="table"><tr><th>Fecha</th><th>Producto</th><th>Tipo</th><th>Cantidad</th></tr><tr th:each="m:${ultimos}"><td th:text="${#temporals.format(m.fecha,'dd/MM/yyyy HH:mm')}"></td><td th:text="${m.producto.nombre}"></td><td th:text="${m.tipoMovimiento.nombre}"></td><td th:text="${m.cantidad}"></td></tr></table></div><div class="panel"><h2>Alertas de bajo stock</h2><div th:each="p:${bajoStock}" class="alert alert-warning"><b th:text="${p.nombre}"></b><br><span th:text="'Stock: '+${p.stockActual}+' / Mínimo: '+${p.stockMinimo}"></span></div></div></section></main><div th:replace="~{general/fragmentos :: footer}"></div></div><div th:replace="~{general/fragmentos :: scripts}"></div></body></html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{general/fragmentos :: head('Dashboard')}"></head>
+
+<body>
+
+    <div th:replace="~{general/fragmentos :: sidebar}"></div>
+
+    <div class="page">
+
+        <div th:replace="~{general/fragmentos :: topbar}"></div>
+
+        <main class="content">
+
+            <!-- ENCABEZADO -->
+            <div class="page-header">
+
+                <div>
+                    <h1>Dashboard principal</h1>
+
+                    <p class="subtitle">
+                        Vista general del inventario de StockEasy
+                    </p>
+                </div>
+
+            </div>
+
+            <!-- TARJETAS RESUMEN -->
+            <section class="cards">
+
+                <!-- TOTAL PRODUCTOS -->
+                <a th:href="@{/inventario}"
+                   class="stat-card text-decoration-none">
+
+                    <i class="fa-solid fa-boxes-stacked"></i>
+
+                    <span>
+                        Total de productos
+                    </span>
+
+                    <strong th:text="${totalProductos}">
+                        0
+                    </strong>
+
+                </a>
+
+                <!-- BAJO STOCK -->
+                <a th:href="@{/reportes/bajo-stock}"
+                   class="stat-card warning text-decoration-none">
+
+                    <i class="fa-solid fa-triangle-exclamation"></i>
+
+                    <span>
+                        Productos con bajo stock
+                    </span>
+
+                    <strong th:text="${totalBajoStock}">
+                        0
+                    </strong>
+
+                </a>
+
+                <!-- ENTRADAS -->
+                <a th:href="@{/movimientos/entrada}"
+                   class="stat-card text-decoration-none">
+
+                    <i class="fa-solid fa-download"></i>
+
+                    <span>
+                        Entradas del mes
+                    </span>
+
+                    <strong th:text="${entradasMes}">
+                        0
+                    </strong>
+
+                </a>
+
+                <!-- SALIDAS -->
+                <a th:href="@{/movimientos/salida}"
+                   class="stat-card text-decoration-none">
+
+                    <i class="fa-solid fa-upload"></i>
+
+                    <span>
+                        Salidas del mes
+                    </span>
+
+                    <strong th:text="${salidasMes}">
+                        0
+                    </strong>
+
+                </a>
+
+            </section>
+
+            <!-- CONTENIDO PRINCIPAL -->
+            <section class="grid-2">
+
+                <!-- ULTIMOS MOVIMIENTOS -->
+                <div class="panel">
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
+
+                        <h2 class="mb-0">
+                            Últimos movimientos
+                        </h2>
+
+                        <a th:href="@{/movimientos/listado}"
+                           class="btn btn-sm btn-outline-primary">
+
+                            Ver historial completo
+
+                        </a>
+
+                    </div>
+
+                    <div class="table-responsive">
+
+                        <table class="table table-hover align-middle">
+
+                            <thead>
+
+                                <tr>
+                                    <th>Fecha</th>
+                                    <th>Producto</th>
+                                    <th>Tipo</th>
+                                    <th>Cantidad</th>
+                                </tr>
+
+                            </thead>
+
+                            <tbody>
+
+                                <tr th:each="movimiento : ${ultimosMovimientos}">
+
+                                    <!-- FECHA -->
+                                    <td th:text="${#temporals.format(
+                                        movimiento.fecha,
+                                        'dd/MM/yyyy HH:mm'
+                                    )}">
+                                        12/08/2026 06:29
+                                    </td>
+
+                                    <!-- PRODUCTO -->
+                                    <td th:text="${movimiento.producto.nombre}">
+                                        Producto
+                                    </td>
+
+                                    <!-- TIPO -->
+                                    <td>
+
+                                        <span th:if="${movimiento.tipoMovimiento.nombre == 'Entrada'}"
+                                              class="badge text-bg-success">
+
+                                            <i class="fa-solid fa-arrow-down me-1"></i>
+                                            Entrada
+
+                                        </span>
+
+                                        <span th:if="${movimiento.tipoMovimiento.nombre == 'Salida'}"
+                                              class="badge text-bg-warning">
+
+                                            <i class="fa-solid fa-arrow-up me-1"></i>
+                                            Salida
+
+                                        </span>
+
+                                    </td>
+
+                                    <!-- CANTIDAD -->
+                                    <td>
+
+                                        <strong th:text="${movimiento.cantidad}">
+                                            0
+                                        </strong>
+
+                                    </td>
+
+                                </tr>
+
+                                <!-- SIN MOVIMIENTOS -->
+                                <tr th:if="${#lists.isEmpty(ultimosMovimientos)}">
+
+                                    <td colspan="4"
+                                        class="text-center text-muted py-4">
+
+                                        No hay movimientos registrados.
+
+                                    </td>
+
+                                </tr>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+
+                <!-- ALERTAS DE BAJO STOCK -->
+                <div class="panel">
+
+                    <div class="d-flex justify-content-between
+                                align-items-center mb-3">
+
+                        <h2 class="mb-0">
+                            Alertas de bajo stock
+                        </h2>
+
+                        <span class="badge text-bg-warning"
+                              th:text="${totalBajoStock + ' productos'}">
+                            0 productos
+                        </span>
+
+                    </div>
+
+                    <!-- PRODUCTOS BAJO STOCK -->
+                    <div th:each="producto : ${productosBajoStock}"
+                         class="border rounded-3 p-3 mb-3 bg-light">
+
+                        <!-- CABECERA ALERTA -->
+                        <div class="d-flex justify-content-between
+                                    align-items-start mb-2">
+
+                            <div>
+
+                                <h6 class="fw-bold mb-1"
+                                    th:text="${producto.nombre}">
+                                    Producto
+                                </h6>
+
+                                <small class="text-muted">
+
+                                    <span th:text="${producto.codigo}">
+                                        P-001
+                                    </span>
+
+                                    ·
+
+                                    <span th:text="${producto.categoria.nombre}">
+                                        Categoría
+                                    </span>
+
+                                    ·
+
+                                    <span th:text="${producto.proveedor.nombre}">
+                                        Proveedor
+                                    </span>
+
+                                </small>
+
+                            </div>
+
+                            <!-- CRITICO -->
+                            <span th:if="${producto.stockActual < producto.stockMinimo}"
+                                  class="badge text-bg-danger">
+
+                                Crítico
+
+                            </span>
+
+                            <!-- AL LIMITE -->
+                            <span th:if="${producto.stockActual == producto.stockMinimo}"
+                                  class="badge text-bg-warning">
+
+                                Al límite
+
+                            </span>
+
+                        </div>
+
+                        <!-- DATOS DE STOCK -->
+                        <div class="row g-2 mb-3">
+
+                            <!-- STOCK ACTUAL -->
+                            <div class="col-4">
+
+                                <small class="text-muted d-block">
+                                    Stock actual
+                                </small>
+
+                                <strong th:text="${producto.stockActual}">
+                                    0
+                                </strong>
+
+                            </div>
+
+                            <!-- STOCK MINIMO -->
+                            <div class="col-4">
+
+                                <small class="text-muted d-block">
+                                    Stock mínimo
+                                </small>
+
+                                <strong th:text="${producto.stockMinimo}">
+                                    0
+                                </strong>
+
+                            </div>
+
+                            <!-- FALTANTE -->
+                            <div class="col-4">
+
+                                <small class="text-muted d-block">
+                                    Faltante
+                                </small>
+
+                                <strong class="text-danger"
+                                        th:text="${producto.stockActual < producto.stockMinimo
+                                            ? producto.stockMinimo - producto.stockActual
+                                            : 0}">
+                                    0
+                                </strong>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ACCIONES -->
+                        <div class="d-flex flex-wrap gap-2">
+
+                            <a th:href="@{/movimientos/entrada}"
+                               class="btn btn-sm btn-outline-primary">
+
+                                <i class="fa-solid fa-plus me-1"></i>
+                                Registrar entrada
+
+                            </a>
+
+                            <a th:href="@{/productos/detalle/{id}
+                               (id=${producto.idProducto})}"
+                               class="btn btn-sm btn-outline-secondary">
+
+                                <i class="fa-solid fa-eye me-1"></i>
+                                Ver producto
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                    <!-- SIN ALERTAS -->
+                    <div th:if="${#lists.isEmpty(productosBajoStock)}"
+                         class="text-center text-muted py-4">
+
+                        <i class="fa-solid fa-circle-check
+                                  text-success fs-2 mb-2">
+                        </i>
+
+                        <p class="mb-0">
+                            No hay productos con bajo stock.
+                        </p>
+
+                    </div>
+
+                    <!-- REPORTE COMPLETO -->
+                    <div class="text-end mt-3">
+
+                        <a th:href="@{/reportes/bajo-stock}"
+                           class="btn btn-outline-primary">
+
+                            <i class="fa-solid fa-chart-column me-1"></i>
+                            Ver reporte completo
+
+                        </a>
+
+                    </div>
+
+                </div>
+
+            </section>
+
+        </main>
+
+        <div th:replace="~{general/fragmentos :: footer}"></div>
+
+    </div>
+
+    <div th:replace="~{general/fragmentos :: scripts}"></div>
+
+</body>
+
+</html>

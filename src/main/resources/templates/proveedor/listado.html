@@ -1,36 +1,237 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{general/fragmentos :: head('Proveedores')}"></head>
-    <body class="bg-body-secondary">
-        <div th:replace="~{general/fragmentos :: sidebar}"></div>
-        <div class="page">
-            <div th:replace="~{general/fragmentos :: topbar}"></div>
-            <main class="content">
-                <div class="head">
+
+<head th:replace="~{general/fragmentos :: head('Proveedores')}"></head>
+
+<body>
+
+    <div th:replace="~{general/fragmentos :: sidebar}"></div>
+
+    <div class="page">
+
+        <div th:replace="~{general/fragmentos :: topbar}"></div>
+
+        <main class="content">
+
+            <!-- ENCABEZADO -->
+            <div class="page-header">
+
+                <div>
+
                     <h1>Proveedores</h1>
-                    <a class="btn btn-primary" th:href="@{/proveedores/nuevo}">Registrar</a>
+
+                    <p class="subtitle">
+                        Administración de proveedores asociados al inventario
+                    </p>
+
                 </div>
-                <div class="panel">
-                    <table class="table">
-                        <tr>
-                            <th>Nombre</th><th>Teléfono</th><th>Correo</th><th>Dirección</th><th>Estado</th><th>Acciones</th>
-                        </tr>
-                        <tr th:each="e:${proveedores}">
-                            <td th:text="${e.nombre}"></td>
-                            <td th:text="${e.telefono}"></td>
-                            <td th:text="${e.correo}"></td>
-                            <td th:text="${e.direccion}"></td>
-                            <td th:text="${e.estado ? 'Activo' : 'Inactivo'}"></td>
-                            <td>
-                                <a th:href="@{/proveedores/editar/{id}(id=${e.idProveedor})}">Editar</a> |
-                                <a class="text-danger" th:href="@{/proveedores/desactivar/{id}(id=${e.idProveedor})}" onclick="return confirm('¿Seguro que desea desactivar este proveedor?');">Desactivar</a>
-                            </td>
-                        </tr>
+
+                <a th:href="@{/proveedores/nuevo}"
+                   class="btn btn-primary">
+
+                    <i class="fa-solid fa-plus me-1"></i>
+                    Registrar proveedor
+
+                </a>
+
+            </div>
+
+            <!-- MENSAJES -->
+            <div th:if="${mensaje}"
+                 class="alert alert-success"
+                 th:text="${mensaje}">
+            </div>
+
+            <div th:if="${error}"
+                 class="alert alert-danger"
+                 th:text="${error}">
+            </div>
+
+            <!-- FILTRO -->
+            <div class="panel mb-4">
+
+                <form th:action="@{/proveedores/listado}"
+                      method="get">
+
+                    <div class="row g-3 align-items-end">
+
+                        <!-- BUSQUEDA -->
+                        <div class="col-12 col-md-8 col-lg-5">
+
+                            <label class="form-label">
+                                Buscar
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   name="texto"
+                                   th:value="${texto}"
+                                   placeholder="Nombre del proveedor">
+
+                        </div>
+
+                        <!-- BOTON BUSCAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <button type="submit"
+                                    class="btn btn-primary w-100">
+
+                                <i class="fa-solid fa-magnifying-glass me-1"></i>
+                                Buscar
+
+                            </button>
+
+                        </div>
+
+                        <!-- BOTON LIMPIAR -->
+                        <div class="col-12 col-sm-6 col-lg-auto">
+
+                            <a th:href="@{/proveedores/listado}"
+                               class="btn btn-outline-secondary w-100">
+
+                                <i class="fa-solid fa-rotate-left me-1"></i>
+                                Limpiar
+
+                            </a>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+            <!-- TABLA -->
+            <div class="panel">
+
+                <div class="d-flex justify-content-between
+                            align-items-center mb-3">
+
+                    <h5 class="mb-0">
+                        Proveedores registrados
+                    </h5>
+
+                    <span class="badge text-bg-primary"
+                          th:text="${proveedores.size() + ' proveedores'}">
+                        0 proveedores
+                    </span>
+
+                </div>
+
+                <div class="table-responsive">
+
+                    <table class="table table-hover align-middle">
+
+                        <thead>
+
+                            <tr>
+                                <th>Proveedor</th>
+                                <th>Teléfono</th>
+                                <th>Correo</th>
+                                <th>Dirección</th>
+                                <th>Estado</th>
+                                <th>Acciones</th>
+                            </tr>
+
+                        </thead>
+
+                        <tbody>
+
+                            <tr th:each="proveedor : ${proveedores}">
+
+                                <td th:text="${proveedor.nombre}">
+                                    Proveedor
+                                </td>
+
+                                <td th:text="${proveedor.telefono}">
+                                    2222-1000
+                                </td>
+
+                                <td th:text="${proveedor.correo}">
+                                    correo@proveedor.com
+                                </td>
+
+                                <td th:text="${proveedor.direccion}">
+                                    San José, Costa Rica
+                                </td>
+
+                                <td>
+
+                                    <span th:if="${proveedor.estado}"
+                                          class="badge text-bg-success">
+
+                                        Activo
+
+                                    </span>
+
+                                    <span th:unless="${proveedor.estado}"
+                                          class="badge text-bg-secondary">
+
+                                        Inactivo
+
+                                    </span>
+
+                                </td>
+
+                                <td>
+
+                                    <div class="d-flex flex-wrap gap-2">
+
+                                        <a th:href="@{/proveedores/editar/{id}
+                                           (id=${proveedor.idProveedor})}"
+                                           class="btn btn-sm btn-outline-primary">
+
+                                            <i class="fa-solid fa-pen-to-square me-1"></i>
+                                            Editar
+
+                                        </a>
+
+                                        <a th:if="${proveedor.estado}"
+                                           th:href="@{/proveedores/desactivar/{id}
+                                           (id=${proveedor.idProveedor})}"
+                                           class="btn btn-sm btn-outline-danger">
+
+                                            <i class="fa-solid fa-ban me-1"></i>
+                                            Desactivar
+
+                                        </a>
+
+                                    </div>
+
+                                </td>
+
+                            </tr>
+
+                            <!-- SIN RESULTADOS -->
+                            <tr th:if="${#lists.isEmpty(proveedores)}">
+
+                                <td colspan="6"
+                                    class="text-center text-muted py-4">
+
+                                    No se encontraron proveedores
+                                    con el filtro seleccionado.
+
+                                </td>
+
+                            </tr>
+
+                        </tbody>
+
                     </table>
+
                 </div>
-            </main>
-            <div th:replace="~{general/fragmentos :: footer}"></div>
-        </div>
-        <div th:replace="~{general/fragmentos :: scripts}"></div>
-    </body>
+
+            </div>
+
+        </main>
+
+        <div th:replace="~{general/fragmentos :: footer}"></div>
+
+    </div>
+
+    <div th:replace="~{general/fragmentos :: scripts}"></div>
+
+</body>
+
 </html>
