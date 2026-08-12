@@ -65,17 +65,7 @@
                 Dashboard
 
             </a>
-
-            <!-- PRODUCTOS -->
-            <a class="nav-link"
-               sec:authorize="hasAnyRole('ADMINISTRADOR','ENCARGADO')"
-               th:href="@{/productos/listado}">
-
-                <i class="fa-solid fa-box me-2"></i>
-                Productos
-
-            </a>
-
+            
             <!-- INVENTARIO GENERAL -->
             <a class="nav-link"
                sec:authorize="hasAnyRole('ADMINISTRADOR','ENCARGADO')"
@@ -86,6 +76,16 @@
 
             </a>
 
+            <!-- PRODUCTOS -->
+            <a class="nav-link"
+               sec:authorize="hasAnyRole('ADMINISTRADOR','ENCARGADO')"
+               th:href="@{/productos/listado}">
+
+                <i class="fa-solid fa-box me-2"></i>
+                Productos
+
+            </a>
+            
             <!-- CATEGORIAS -->
             <a class="nav-link"
                sec:authorize="hasAnyRole('ADMINISTRADOR','ENCARGADO')"
