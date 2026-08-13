@@ -2,9 +2,11 @@ package com.stockeasy.controllers;
 
 import com.stockeasy.domain.Proveedor;
 import com.stockeasy.service.ProveedorService;
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -66,15 +68,23 @@ public class ProveedorController {
 
     @PostMapping("/guardar")
     public String guardar(
-            @ModelAttribute Proveedor proveedor,
+            @Valid @ModelAttribute("proveedor") Proveedor proveedor,
+            BindingResult bindingResult,
+            Model model,
             RedirectAttributes redirectAttributes
     ) {
+
+        if (bindingResult.hasErrors()) {
+            return "proveedor/form";
+        }
 
         proveedorService.save(proveedor);
 
         redirectAttributes.addFlashAttribute(
                 "mensaje",
-                "Proveedor guardado correctamente."
+                proveedor.getIdProveedor() == null
+                        ? "Proveedor registrado correctamente."
+                        : "Proveedor actualizado correctamente."
         );
 
         return "redirect:/proveedores/listado";

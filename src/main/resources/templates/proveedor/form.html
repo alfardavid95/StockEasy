@@ -1,39 +1,301 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-    <head th:replace="~{general/fragmentos :: head('Formulario')}"></head>
-    <body class="bg-body-secondary">
-        <div th:replace="~{general/fragmentos :: sidebar}"></div>
-        <div class="page">
-            <div th:replace="~{general/fragmentos :: topbar}"></div>
-            <main class="content">
-                <h1>Formulario</h1>
-                <form class="panel formgrid" th:action="@{/proveedores/guardar}" th:object="${proveedor}" method="post">
-                    <input type="hidden" th:field="*{idProveedor}">
-                    <div>
-                        <input class="form-control" th:field="*{nombre}" placeholder="Nombre">
-                        <span class="text-danger" th:if="${#fields.hasErrors('nombre')}" th:errors="*{nombre}"></span>
+
+<head th:replace="~{general/fragmentos :: head('Proveedor')}"></head>
+
+<body class="bg-body-secondary">
+
+    <div th:replace="~{general/fragmentos :: sidebar}"></div>
+
+    <div class="page">
+
+        <div th:replace="~{general/fragmentos :: topbar}"></div>
+
+        <main class="content">
+
+            <!-- ENCABEZADO -->
+            <div class="page-header">
+
+                <div>
+
+                    <h1 th:text="${proveedor.idProveedor == null
+                        ? 'Registrar proveedor'
+                        : 'Editar proveedor'}">
+                        Proveedor
+                    </h1>
+
+                    <p class="subtitle"
+                       th:if="${proveedor.idProveedor == null}">
+                        Registre la información general del nuevo proveedor
+                    </p>
+
+                    <p class="subtitle"
+                       th:if="${proveedor.idProveedor != null}">
+
+                        Actualice la información del proveedor
+
+                        <strong th:text="${proveedor.nombre}">
+                            TecnoCR
+                        </strong>
+
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- FORMULARIO -->
+            <form th:action="@{/proveedores/guardar}"
+                  th:object="${proveedor}"
+                  method="post">
+
+                <input type="hidden"
+                       th:field="*{idProveedor}">
+
+
+                <div class="panel">
+
+                    <!-- TITULO DEL PANEL -->
+                    <div class="d-flex align-items-center mb-4">
+
+                        <i class="fa-solid fa-truck
+                                  text-primary
+                                  fs-4
+                                  me-2">
+                        </i>
+
+                        <h5 class="mb-0">
+                            Información del proveedor
+                        </h5>
+
                     </div>
-                    <div>
-                        <input class="form-control" th:field="*{telefono}" placeholder="Teléfono">
-                        <span class="text-danger" th:if="${#fields.hasErrors('telefono')}" th:errors="*{telefono}"></span>
+
+
+                    <!-- AVISO GENERAL DE ERRORES -->
+                    <div th:if="${#fields.hasAnyErrors()}"
+                         class="alert alert-danger mb-4">
+
+                        <div class="d-flex align-items-start">
+
+                            <i class="fa-solid fa-triangle-exclamation
+                                      me-2 mt-1">
+                            </i>
+
+                            <div>
+                                <strong>
+                                    No se pudo guardar el proveedor.
+                                </strong>
+
+                                <div>
+                                    Revise los campos marcados e intente nuevamente.
+                                </div>
+                            </div>
+
+                        </div>
+
                     </div>
-                    <div>
-                        <input class="form-control" th:field="*{correo}" placeholder="Correo">
-                        <span class="text-danger" th:if="${#fields.hasErrors('correo')}" th:errors="*{correo}"></span>
+
+
+                    <div class="row g-4">
+
+                        <!-- NOMBRE -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Nombre del proveedor
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('nombre')}
+                                        ? ' is-invalid' : ''"
+                                   th:field="*{nombre}"
+                                   placeholder="Ej: TecnoCR">
+
+                            <div class="invalid-feedback"
+                                 th:if="${#fields.hasErrors('nombre')}"
+                                 th:errors="*{nombre}">
+                                El nombre del proveedor es obligatorio.
+                            </div>
+
+                        </div>
+
+
+                        <!-- TELEFONO -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Teléfono
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('telefono')}
+                                        ? ' is-invalid' : ''"
+                                   th:field="*{telefono}"
+                                   placeholder="Ej: 2222-1000">
+
+                            <div class="invalid-feedback"
+                                 th:if="${#fields.hasErrors('telefono')}"
+                                 th:errors="*{telefono}">
+                                El teléfono debe tener 8 dígitos.
+                            </div>
+
+                            <div class="form-text"
+                                 th:unless="${#fields.hasErrors('telefono')}">
+                                Formatos permitidos: 22221000 o 2222-1000.
+                            </div>
+
+                        </div>
+
+
+                        <!-- CORREO -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Correo electrónico
+                            </label>
+
+                            <input type="email"
+                                   class="form-control"
+                                   th:classappend="${#fields.hasErrors('correo')}
+                                        ? ' is-invalid' : ''"
+                                   th:field="*{correo}"
+                                   placeholder="Ej: contacto@proveedor.com">
+
+                            <div class="invalid-feedback"
+                                 th:if="${#fields.hasErrors('correo')}"
+                                 th:errors="*{correo}">
+                                Ingrese un correo electrónico válido.
+                            </div>
+
+                        </div>
+
+
+                        <!-- DIRECCION -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Dirección
+                            </label>
+
+                            <input type="text"
+                                   class="form-control"
+                                   th:field="*{direccion}"
+                                   placeholder="Ej: San José, Costa Rica">
+
+                            <div class="form-text">
+                                Puede indicar provincia, cantón o dirección de referencia.
+                            </div>
+
+                        </div>
+
+
+                        <!-- ESTADO -->
+                        <div class="col-12 col-md-6">
+
+                            <label class="form-label fw-semibold">
+                                Estado
+                            </label>
+
+                            <select class="form-select"
+                                    th:field="*{estado}">
+
+                                <option th:value="true">
+                                    Activo
+                                </option>
+
+                                <option th:value="false">
+                                    Inactivo
+                                </option>
+
+                            </select>
+
+                        </div>
+
+
+                        <!-- INFORMACION -->
+                        <div class="col-12">
+
+                            <div class="border rounded-3 bg-light p-3">
+
+                                <div class="d-flex align-items-start">
+
+                                    <i class="fa-solid
+                                              fa-circle-info
+                                              text-primary
+                                              me-2
+                                              mt-1">
+                                    </i>
+
+                                    <div>
+
+                                        <strong class="d-block mb-1">
+                                            Información del proveedor
+                                        </strong>
+
+                                        <span class="text-muted">
+                                            Estos datos se utilizarán para
+                                            identificar al proveedor en los
+                                            productos y reportes del inventario.
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+
+                        <!-- BOTONES -->
+                        <div class="col-12">
+
+                            <hr>
+
+                            <div class="d-flex justify-content-end gap-2">
+
+                                <a class="btn btn-outline-secondary"
+                                   th:href="@{/proveedores/listado}">
+
+                                    <i class="fa-solid fa-xmark me-1"></i>
+                                    Cancelar
+
+                                </a>
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i class="fa-solid fa-floppy-disk me-1"></i>
+
+                                    <span th:text="${proveedor.idProveedor == null
+                                        ? 'Registrar proveedor'
+                                        : 'Guardar cambios'}">
+                                        Guardar
+                                    </span>
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
                     </div>
-                    <input class="form-control" th:field="*{direccion}" placeholder="Dirección">
-                    <select class="form-select" th:field="*{estado}">
-                        <option th:value="true">Activo</option>
-                        <option th:value="false">Inactivo</option>
-                    </select>
-                    <div class="full right">
-                        <a class="btn btn-secondary" th:href="@{/proveedores/listado}">Cancelar</a>
-                        <button class="btn btn-primary">Guardar</button>
-                    </div>
-                </form>
-            </main>
-            <div th:replace="~{general/fragmentos :: footer}"></div>
-        </div>
-        <div th:replace="~{general/fragmentos :: scripts}"></div>
-    </body>
+
+                </div>
+
+            </form>
+
+        </main>
+
+        <div th:replace="~{general/fragmentos :: footer}"></div>
+
+    </div>
+
+    <div th:replace="~{general/fragmentos :: scripts}"></div>
+
+</body>
+
 </html>

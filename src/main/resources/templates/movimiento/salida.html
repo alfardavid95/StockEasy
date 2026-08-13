@@ -1,1 +1,222 @@
-<!DOCTYPE html><html xmlns:th="http://www.thymeleaf.org"><head th:replace="~{general/fragmentos :: head('Salida')}"></head><body class="bg-body-secondary"><div th:replace="~{general/fragmentos :: sidebar}"></div><div class="page"><div th:replace="~{general/fragmentos :: topbar}"></div><main class="content"><h1>Registrar salida de inventario</h1><div th:if="${error}" class="alert alert-danger" th:text="${error}"></div><form class="panel formgrid" th:action="@{/movimientos/salida/guardar}" method="post"><select class="form-select" name="idProducto" required><option value="">Producto</option><option th:each="p:${productos}" th:value="${p.idProducto}" th:text="${p.codigo+' - '+p.nombre+' / Stock: '+p.stockActual}"></option></select><input class="form-control" type="number" min="1" name="cantidad" placeholder="Cantidad" required><textarea class="form-control full" name="observacion" placeholder="Observación"></textarea><div class="full alert alert-info">Validación: la cantidad a retirar no puede ser mayor al stock disponible.</div><div class="full right"><button class="btn btn-primary">Guardar salida</button></div></form></main><div th:replace="~{general/fragmentos :: footer}"></div></div><div th:replace="~{general/fragmentos :: scripts}"></div></body></html>
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{general/fragmentos :: head('Registrar salida')}"></head>
+
+<body class="bg-body-secondary">
+
+    <div th:replace="~{general/fragmentos :: sidebar}"></div>
+
+    <div class="page">
+
+        <div th:replace="~{general/fragmentos :: topbar}"></div>
+
+        <main class="content">
+
+            <!-- ENCABEZADO -->
+            <div class="page-header">
+
+                <div>
+
+                    <h1>Registrar salida de inventario</h1>
+
+                    <p class="subtitle">
+                        Registre la salida de unidades de un producto del inventario
+                    </p>
+
+                </div>
+
+            </div>
+
+            <!-- FORMULARIO -->
+            <div class="panel">
+
+                <div class="d-flex align-items-center mb-4">
+
+                    <i class="fa-solid fa-arrow-up-from-bracket
+                              text-primary
+                              fs-4
+                              me-2">
+                    </i>
+
+                    <h5 class="mb-0">
+                        Información de la salida
+                    </h5>
+
+                </div>
+
+                <form th:action="@{/movimientos/salida/guardar}"
+                      method="post">
+
+                    <div class="row g-4">
+
+                        <!-- PRODUCTO -->
+                        <div class="col-12 col-md-7">
+
+                            <label class="form-label fw-semibold">
+                                Producto
+                            </label>
+
+                            <select class="form-select"
+                                    name="idProducto"
+                                    required>
+
+                                <option value="">
+                                    Seleccione un producto
+                                </option>
+
+                                <option th:each="producto : ${productos}"
+                                        th:value="${producto.idProducto}"
+                                        th:text="${producto.codigo + ' - ' + producto.nombre + ' | Stock disponible: ' + producto.stockActual}">
+                                </option>
+
+                            </select>
+
+                            <div class="form-text">
+                                Seleccione el producto que desea retirar del inventario.
+                            </div>
+
+                        </div>
+
+                        <!-- CANTIDAD -->
+                        <div class="col-12 col-md-5">
+
+                            <label class="form-label fw-semibold">
+                                Cantidad a retirar
+                            </label>
+
+                            <div class="input-group">
+
+                                <span class="input-group-text">
+                                    <i class="fa-solid fa-boxes-stacked"></i>
+                                </span>
+
+                                <input type="number"
+                                       class="form-control"
+                                       name="cantidad"
+                                       min="1"
+                                       placeholder="Ej: 5"
+                                       required>
+
+                            </div>
+
+                            <div class="form-text">
+                                Ingrese la cantidad de unidades que salen del inventario.
+                            </div>
+
+                        </div>
+
+                        <!-- OBSERVACION -->
+                        <div class="col-12">
+
+                            <label class="form-label fw-semibold">
+                                Observación
+                            </label>
+
+                            <textarea class="form-control"
+                                      name="observacion"
+                                      rows="4"
+                                      placeholder="Ej: Venta, consumo interno, producto dañado..."></textarea>
+
+                        </div>
+
+                        <!-- VALIDACION -->
+                        <div class="col-12">
+
+                            <div class="border rounded-3 bg-light p-3">
+
+                                <div class="d-flex align-items-start">
+
+                                    <i class="fa-solid
+                                              fa-circle-info
+                                              text-primary
+                                              me-2
+                                              mt-1">
+                                    </i>
+
+                                    <div>
+
+                                        <strong class="d-block mb-1">
+                                            Validación de inventario
+                                        </strong>
+
+                                        <span class="text-muted">
+                                            La cantidad a retirar no puede ser
+                                            mayor al stock disponible del producto.
+                                        </span>
+
+                                    </div>
+
+                                </div>
+
+                            </div>
+
+                        </div>
+
+                        <!-- ERROR -->
+                        <div class="col-12"
+                             th:if="${error}">
+
+                            <div class="alert alert-danger mb-0">
+
+                                <i class="fa-solid
+                                          fa-triangle-exclamation
+                                          me-2">
+                                </i>
+
+                                <span th:text="${error}">
+                                    Ocurrió un error al registrar la salida.
+                                </span>
+
+                            </div>
+
+                        </div>
+
+                        <!-- BOTONES -->
+                        <div class="col-12">
+
+                            <hr>
+
+                            <div class="d-flex justify-content-end gap-2">
+
+                                <a th:href="@{/dashboard}"
+                                   class="btn btn-outline-secondary">
+
+                                    <i class="fa-solid fa-xmark me-1"></i>
+                                    Cancelar
+
+                                </a>
+
+                                <button type="submit"
+                                        class="btn btn-primary">
+
+                                    <i class="fa-solid
+                                              fa-arrow-up-from-bracket
+                                              me-1">
+                                    </i>
+
+                                    Registrar salida
+
+                                </button>
+
+                            </div>
+
+                        </div>
+
+                    </div>
+
+                </form>
+
+            </div>
+
+        </main>
+
+        <div th:replace="~{general/fragmentos :: footer}"></div>
+
+    </div>
+
+    <div th:replace="~{general/fragmentos :: scripts}"></div>
+
+</body>
+
+</html>
