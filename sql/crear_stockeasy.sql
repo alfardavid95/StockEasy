@@ -1,5 +1,5 @@
 DROP USER IF EXISTS 'usuario_stockeasy'@'localhost';
-CREATE USER 'usuario_stockeasy'@'localhost' IDENTIFIED BY '123456';
+CREATE USER 'usuario_stockeasy'@'localhost' IDENTIFIED BY 'CAMBIAR_PASSWORD_LOCAL';
 DROP DATABASE IF EXISTS stockeasy;
 CREATE DATABASE stockeasy CHARACTER SET utf8mb4 COLLATE utf8mb4_unicode_ci;
 GRANT ALL PRIVILEGES ON stockeasy.* TO 'usuario_stockeasy'@'localhost';

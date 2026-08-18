@@ -1,4 +1,27 @@
+# Java / Maven
 target/
-nbactions.xml
+*.class
+
+# IDE
 .idea/
-*.iml
+.vscode/
+.nb-gradle/
+nbproject/private/
+
+# Logs
+*.log
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Secrets
+.env
+*.pem
+*.key
+*.p12
+*.jks
+application-local.properties
+
+# Local Spring Boot config
+src/main/resources/application-local.properties
