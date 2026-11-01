@@ -50,24 +50,8 @@ Proveedor
 MovimientoInventario
 TipoMovimiento
 
--Organización de ramas
-main: rama principal con versión estable del proyecto.
-develop: rama de integración de avances.
-feature/productos: desarrollo del módulo de productos.
-feature/inventario: desarrollo de entradas, salidas y movimientos.
-feature/reportes: desarrollo de reportes.
-feature/usuarios: desarrollo de usuarios y roles.
-Acuerdo básico de trabajo
-Cada integrante debe trabajar en una rama asignada.
-No se debe subir código directamente a main.
-Los cambios deben integrarse primero en develop.
-Antes de hacer merge, se debe revisar que el código funcione correctamente.
-Los commits deben tener mensajes claros y relacionados con el cambio realizado.
-
--Integrantes
-David Alfaro
-Dylan Madrid
-Brayan Ruiz
+-Mantenimiento
+La gestión y evolución del repositorio se realizan bajo la administración actual del proyecto. Los cambios se validan mediante revisión técnica y pruebas antes de su integración.
 
 -Estado del proyecto
 Avance 1: Historias de usuario, criterios de aceptación, backlog priorizado, prototipo visual, mapa de navegación y modelo preliminar de datos.
